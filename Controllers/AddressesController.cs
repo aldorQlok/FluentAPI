@@ -12,54 +12,55 @@ namespace FluentAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class AddressesController : ControllerBase
     {
         private readonly FluentAPIContext _context;
 
-        public StudentsController(FluentAPIContext context)
+        public AddressesController(FluentAPIContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<Address>>> GetAddresses()
         {
-            return await _context.Students.ToListAsync();
+            return await _context.Addresses.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<Address>> GetAddress(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var address = await _context.Addresses.FindAsync(id);
 
-            if (student == null)
+            if (address == null)
             {
                 return NotFound();
             }
 
-            return student;
+            return address;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent(Student student)
+        public async Task<ActionResult<Address>> PostAddress(Address address)
         {
-            _context.Students.Add(student);
+            _context.Addresses.Add(address);
+
             await _context.SaveChangesAsync();
 
-            return Ok(student);
+            return Ok(address);
         }
 
-        // DELETE: api/Students/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> DeleteAddress(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
+            var address = await _context.Addresses.FindAsync(id);
+
+            if (address == null)
             {
                 return NotFound();
             }
 
-            _context.Students.Remove(student);
+            _context.Addresses.Remove(address);
             await _context.SaveChangesAsync();
 
             return NoContent();

@@ -12,54 +12,54 @@ namespace FluentAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentsController : ControllerBase
+    public class CoursesController : ControllerBase
     {
         private readonly FluentAPIContext _context;
 
-        public StudentsController(FluentAPIContext context)
+        public CoursesController(FluentAPIContext context)
         {
             _context = context;
         }
 
+        // GET: api/Courses
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
+        public async Task<ActionResult<IEnumerable<Course>>> GetCourses()
         {
-            return await _context.Students.ToListAsync();
+            return await _context.Courses.ToListAsync();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Student>> GetStudent(int id)
+        public async Task<ActionResult<Course>> GetCourse(int id)
         {
-            var student = await _context.Students.FindAsync(id);
+            var course = await _context.Courses.FindAsync(id);
 
-            if (student == null)
+            if (course == null)
             {
                 return NotFound();
             }
 
-            return student;
+            return course;
         }
 
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent(Student student)
+        public async Task<ActionResult<Course>> PostCourse(Course course)
         {
-            _context.Students.Add(student);
+            _context.Courses.Add(course);
             await _context.SaveChangesAsync();
 
-            return Ok(student);
+            return Ok(course);
         }
 
-        // DELETE: api/Students/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent(int id)
+        public async Task<IActionResult> DeleteCourse(int id)
         {
-            var student = await _context.Students.FindAsync(id);
-            if (student == null)
+            var course = await _context.Courses.FindAsync(id);
+            if (course == null)
             {
                 return NotFound();
             }
 
-            _context.Students.Remove(student);
+            _context.Courses.Remove(course);
             await _context.SaveChangesAsync();
 
             return NoContent();
