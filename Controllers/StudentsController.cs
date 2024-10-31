@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using FluentAPI.Data;
 using FluentAPI.Models;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FluentAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    // [EnableRateLimiting("Fixed")]
     public class StudentsController : ControllerBase
     {
         private readonly FluentAPIContext _context;
@@ -22,6 +24,9 @@ namespace FluentAPI.Controllers
         }
 
         [HttpGet]
+        // Attribut som aktiverar rate-limiter på GetSTudents.
+        // Går att sätta på kontrollern för att aktivera för alla endpoints (enligt bortkommenterad kod på rad 16)
+        [EnableRateLimiting("Fixed")] 
         public async Task<ActionResult<IEnumerable<Student>>> GetStudents()
         {
             return await _context.Students.ToListAsync();

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FluentAPI.Migrations
 {
     [DbContext(typeof(FluentAPIContext))]
-    [Migration("20241031012447_Init")]
-    partial class Init
+    [Migration("20241031103631_uniqueIndex2")]
+    partial class uniqueIndex2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -35,7 +35,7 @@ namespace FluentAPI.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Country")
                         .IsRequired()
@@ -43,9 +43,12 @@ namespace FluentAPI.Migrations
 
                     b.Property<string>("Street")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Street", "City")
+                        .IsUnique();
 
                     b.ToTable("Addresses");
 
@@ -107,11 +110,13 @@ namespace FluentAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("Age")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("First_Name");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -121,7 +126,7 @@ namespace FluentAPI.Migrations
 
                     b.HasIndex("AddressId");
 
-                    b.ToTable("Students");
+                    b.ToTable("NET23_Students", (string)null);
 
                     b.HasData(
                         new
@@ -156,7 +161,7 @@ namespace FluentAPI.Migrations
                     b.Property<DateTime>("EnrollmentDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("StudentId")
+                    b.Property<int?>("StudentId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -172,28 +177,28 @@ namespace FluentAPI.Migrations
                         {
                             Id = 1,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2024, 10, 31, 2, 24, 46, 864, DateTimeKind.Local).AddTicks(3088),
+                            EnrollmentDate = new DateTime(2024, 10, 31, 11, 36, 31, 260, DateTimeKind.Local).AddTicks(1077),
                             StudentId = 1
                         },
                         new
                         {
                             Id = 2,
                             CourseId = 2,
-                            EnrollmentDate = new DateTime(2024, 10, 31, 2, 24, 46, 864, DateTimeKind.Local).AddTicks(3139),
+                            EnrollmentDate = new DateTime(2024, 10, 31, 11, 36, 31, 260, DateTimeKind.Local).AddTicks(1126),
                             StudentId = 1
                         },
                         new
                         {
                             Id = 3,
                             CourseId = 1,
-                            EnrollmentDate = new DateTime(2024, 10, 31, 2, 24, 46, 864, DateTimeKind.Local).AddTicks(3141),
+                            EnrollmentDate = new DateTime(2024, 10, 31, 11, 36, 31, 260, DateTimeKind.Local).AddTicks(1129),
                             StudentId = 2
                         },
                         new
                         {
                             Id = 4,
                             CourseId = 2,
-                            EnrollmentDate = new DateTime(2024, 10, 31, 2, 24, 46, 864, DateTimeKind.Local).AddTicks(3143),
+                            EnrollmentDate = new DateTime(2024, 10, 31, 11, 36, 31, 260, DateTimeKind.Local).AddTicks(1130),
                             StudentId = 2
                         });
                 });
@@ -212,14 +217,13 @@ namespace FluentAPI.Migrations
                     b.HasOne("FluentAPI.Models.Course", "Course")
                         .WithMany("StudentCourses")
                         .HasForeignKey("CourseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("FluentAPI.Models.Student", "Student")
                         .WithMany("StudentCourses")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Course");
 
