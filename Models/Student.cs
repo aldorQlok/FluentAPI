@@ -11,7 +11,7 @@ namespace FluentAPI.Models
         public int? AddressId { get; set; }
 
 
-        public Address Address { get; set; } // One-to-one relationship
+        public Address Address { get; set; } // One-to-many relationship
         public ICollection<StudentCourse> StudentCourses { get; set; } // Many-to-many relationship
     }
 }
